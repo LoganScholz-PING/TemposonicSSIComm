@@ -28,5 +28,24 @@ unsigned long TempoSSI::ReadPosition()
         data |= digitalRead(this->DATA_PIN);
     }
 
-    return (data & 0x0FFF);
+    return (data & 0x0FFFFFF);
+}
+
+unsigned long TempoSSI::ReadPositionNoMask()
+{
+    unsigned long data = 0;
+    
+    for(int i = 0; i < this->BIT_COUNT; i++)
+    {
+        data <<= 1;
+
+        digitalWrite(this->CLOCK_PIN, LOW);
+        delayMicroseconds(1);
+        digitalWrite(this->CLOCK_PIN, HIGH);
+        delayMicroseconds(1);
+
+        data |= digitalRead(this->DATA_PIN);
+    }
+
+    return data;
 }
