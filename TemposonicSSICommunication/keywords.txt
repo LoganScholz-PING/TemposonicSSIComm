@@ -12,7 +12,8 @@ TempoSSI	KEYWORD1	TempoSSI DATA_TYPE
 # Methods and Functions (KEYWORD2)
 #############################################
 
-ReadPosition KEYWORD2
+ReadPosition	KEYWORD2
+ReadPositionNoMask	KEYWORD2
 
 #############################################
 # Specifies Structures (KEYWORD3)
