@@ -17,7 +17,6 @@ class TempoSSI
         TempoSSI(int DATA_PIN, int CLOCK_PIN, int BIT_COUNT);
 
         unsigned long ReadPosition();
-        unsigned long ReadPositionNoMask();
     
     private:
         int DATA_PIN;
