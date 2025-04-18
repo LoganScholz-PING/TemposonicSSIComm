@@ -13,6 +13,7 @@ Library written specifically for the Temposonics LVDT part # EL00300UD841S2B5100
 
 class TempoSSI
 {
+	// bit-bang read methodology
     public: 
         TempoSSI(int DATA_PIN, int CLOCK_PIN, int BIT_COUNT);
 
@@ -21,6 +22,18 @@ class TempoSSI
     private:
         int DATA_PIN;
         int CLOCK_PIN;
+        int BIT_COUNT;
+};
+
+class TempoSSI_SPI
+{
+	// SPI read methodology
+    public: 
+        TempoSSI_SPI(int BIT_COUNT);
+
+        unsigned long ReadPosition();
+    
+    private:
         int BIT_COUNT;
 };
 
