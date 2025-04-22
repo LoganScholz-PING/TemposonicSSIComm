@@ -24,7 +24,7 @@ class TempoSSI
         int CLOCK_PIN;
         int BIT_COUNT;
 };
-
+/*
 class TempoSSI_SPI
 {
 	// SPI read methodology
@@ -36,5 +36,5 @@ class TempoSSI_SPI
     private:
         int BIT_COUNT;
 };
-
+*/
 #endif
