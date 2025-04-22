@@ -21,28 +21,19 @@ TempoSSI_SPI::TempoSSI_SPI(int BIT_COUNT)
 
 unsigned long TempoSSI::ReadPosition()
 {
-    unsigned long data = 0;
-    unsigned long mask = 1;
-
+	// if in doubt, just use this implementation
+    unsigned long data = 0x0;
     for (int i = 0; i < this->BIT_COUNT; i++)
     {
-        data <<= 1;
-
         digitalWrite(this->CLOCK_PIN, LOW);
-        delayMicroseconds(10);
+        delayMicroseconds(5);
         digitalWrite(this->CLOCK_PIN, HIGH);
-        delayMicroseconds(10);
+        delayMicroseconds(5);
 
         data |= digitalRead(this->DATA_PIN);
+		data <<= 1;
     }
-
-    for (int j = 0; j < this->BIT_COUNT; j++)
-    {
-        mask <<= 1;
-        mask |= 1;
-    }
-
-    return (data & mask);
+	return data;
 }
 
 unsigned long TempoSSI_SPI::ReadPosition()
@@ -54,19 +45,11 @@ unsigned long TempoSSI_SPI::ReadPosition()
 	SPI.begin();
 	SPI.setDataMode(SPI_MODE2);
 	
-	uint8_t out4 = SPI.transfer(0x0);
+	unsigned long data = 0x0;
 	uint8_t out3 = SPI.transfer(0x0);
 	uint8_t out2 = SPI.transfer(0x0);
 	uint8_t out1 = SPI.transfer(0x0);
 	delayMicroseconds(20); // indicate EOT
-	unsigned long output = (out4 << 24) | (out3 << 16) | (out2 << 8) | out1;
-	
-	unsigned long mask = 0;
-	for (int j = 0; j < this->BIT_COUNT; j++)
-    {
-        mask <<= 1;
-        mask |= 1;
-    }
-	
-	return (output & mask);
+	data = (out3 << 16) | (out2 << 8) | out1;
+	return data;
 }
