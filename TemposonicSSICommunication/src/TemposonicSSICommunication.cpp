@@ -1,8 +1,6 @@
 #include "Arduino.h"
 #include "TemposonicSSICommunication.h"
 
-//#include "SPI.h" // TODO: Try to do an #IFDEF SPI somehow before including this
-
 bool debugTemposonicSSICommunication = false;
 
 TempoSSI::TempoSSI(int DATA_PIN, int CLOCK_PIN, int BIT_COUNT)
@@ -16,26 +14,19 @@ TempoSSI::TempoSSI(int DATA_PIN, int CLOCK_PIN, int BIT_COUNT)
     digitalWrite(this->CLOCK_PIN, HIGH);
 }
 
-/*
-TempoSSI_SPI::TempoSSI_SPI(int BIT_COUNT)
-{
-    this->BIT_COUNT = BIT_COUNT;
-}
-*/
-
 unsigned long TempoSSI::ReadPosition()
 {
 	int count = 0;
 	bool done = false;
 	unsigned long dataTempoRead1 = 0x0;
 	unsigned long dataTempoRead2 = 0x0;
-	unsigned long ret = 0x0;
+	unsigned long ret = 0xFFFF;
 	
 	while(!done && count < 3)
 	{
-		// try 3 times to read the value twice
+		// try multiple times to read the same value twice
 		// if the values don't match throw away the data
-		// if 3 tries fail, return 0x0
+		// if multiple tries fail, return 0xFFFF to indicate failure
 		for (int p = 0; p < this->BIT_COUNT; ++p)
 		{
 			digitalWrite(this->CLOCK_PIN, LOW);
@@ -81,7 +72,6 @@ unsigned long TempoSSI::ReadPosition()
 		{
 			dataTempoRead1 = 0x0;
 			dataTempoRead2 = 0x0;
-			ret = 0xFFFF;
 			done = false;
 		}
 		
@@ -91,22 +81,21 @@ unsigned long TempoSSI::ReadPosition()
 	return ret;
 }
 
-/*
-unsigned long TempoSSI_SPI::ReadPosition()
+// much faster but will sometimes give spurious values that need to be averaged out
+unsigned long TempoSSI::ReadPositionRaw()
 {
-	// ESP32 Devkit V4 SPI pins:
-	// MISO: 19 (VSPI_MISO)
-	// SCK:  18 (VSPI_SCK)
+	unsigned long dataTempoRead = 0x0;
 	
-	SPI.begin();
-	SPI.setDataMode(SPI_MODE2);
+	for (int o = 0; o < this->BIT_COUNT; ++o)
+	{
+		digitalWrite(this->CLOCK_PIN, LOW);
+		delayMicroseconds(10);
+		digitalWrite(this->CLOCK_PIN, HIGH);
+		delayMicroseconds(10);
+
+		dataTempoRead |= digitalRead(this->DATA_PIN);
+		dataTempoRead <<= 1;
+	}
 	
-	unsigned long data = 0x0;
-	uint8_t out3 = SPI.transfer(0x0);
-	uint8_t out2 = SPI.transfer(0x0);
-	uint8_t out1 = SPI.transfer(0x0);
-	delayMicroseconds(20); // indicate EOT
-	data = (out3 << 16) | (out2 << 8) | out1;
-	return data;
+	return dataTempoRead;
 }
-*/

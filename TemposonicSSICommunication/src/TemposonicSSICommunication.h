@@ -18,23 +18,12 @@ class TempoSSI
         TempoSSI(int DATA_PIN, int CLOCK_PIN, int BIT_COUNT);
 
         unsigned long ReadPosition();
+		unsigned long ReadPositionRaw();
     
     private:
         int DATA_PIN;
         int CLOCK_PIN;
         int BIT_COUNT;
 };
-/*
-class TempoSSI_SPI
-{
-	// SPI read methodology
-    public: 
-        TempoSSI_SPI(int BIT_COUNT);
 
-        unsigned long ReadPosition();
-    
-    private:
-        int BIT_COUNT;
-};
-*/
 #endif
