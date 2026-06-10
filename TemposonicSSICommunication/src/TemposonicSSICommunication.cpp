@@ -58,23 +58,23 @@ unsigned long TempoSSI::ReadPosition()
 		for (int p = 0; p < this->BIT_COUNT; ++p)
 		{
 			digitalWrite(this->CLOCK_PIN, LOW);
-			delayMicroseconds(clockHalfPeriodMicroseconds);
+			delayMicroseconds(this->clockHalfPeriodMicroseconds);
 			digitalWrite(this->CLOCK_PIN, HIGH);
-			delayMicroseconds(clockHalfPeriodMicroseconds);
+			delayMicroseconds(this->clockHalfPeriodMicroseconds);
 
 			dataTempoRead1 |= digitalRead(this->DATA_PIN);
 			dataTempoRead1 <<= 1;
 		}
 		
 		// let LVDT output register update
-		delayMicroseconds(registerUpdateMicroseconds);
+		delayMicroseconds(this->registerUpdateMicroseconds);
 		
 		for (int o = 0; o < this->BIT_COUNT; ++o)
 		{
 			digitalWrite(this->CLOCK_PIN, LOW);
-			delayMicroseconds(clockHalfPeriodMicroseconds);
+			delayMicroseconds(this->clockHalfPeriodMicroseconds);
 			digitalWrite(this->CLOCK_PIN, HIGH);
-			delayMicroseconds(clockHalfPeriodMicroseconds);
+			delayMicroseconds(this->clockHalfPeriodMicroseconds);
 
 			dataTempoRead2 |= digitalRead(this->DATA_PIN);
 			dataTempoRead2 <<= 1;
@@ -117,9 +117,9 @@ unsigned long TempoSSI::ReadPositionRaw()
 	for (int o = 0; o < this->BIT_COUNT; ++o)
 	{
 		digitalWrite(this->CLOCK_PIN, LOW);
-		delayMicroseconds(clockHalfPeriodMicroseconds);
+		delayMicroseconds(this->clockHalfPeriodMicroseconds);
 		digitalWrite(this->CLOCK_PIN, HIGH);
-		delayMicroseconds(clockHalfPeriodMicroseconds);
+		delayMicroseconds(this->clockHalfPeriodMicroseconds);
 
 		dataTempoRead |= digitalRead(this->DATA_PIN);
 		dataTempoRead <<= 1;
