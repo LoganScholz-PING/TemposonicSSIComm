@@ -1,7 +1,35 @@
 #include "Arduino.h"
 #include "TemposonicSSICommunication.h"
 
-bool debugTemposonicSSICommunication = false;
+void TempoSSI::SetClockHalfPeriodMicroseconds(uint32_t halfPeriodTimeMicroseconds)
+{
+	this->clockHalfPeriodMicroseconds = halfPeriodTimeMicroseconds;
+}
+
+void TempoSSI::SetRegisterUpdateTimeMicroseconds(uint32_t registerUpdateTimeMicroseconds)
+{
+	this->registerUpdateMicroseconds = registerUpdateTimeMicroseconds;
+}
+
+uint32_t TempoSSI::GetClockHalfPeriodMicroseconds()
+{
+	return this->clockHalfPeriodMicroseconds;
+}
+
+uint32_t TempoSSI::GetRegisterUpdateTimeMicroseconds()
+{
+	return this->registerUpdateMicroseconds;
+}
+
+void TempoSSI::EnableDebugOutput()
+{
+	this->debugTemposonicSSICommunication = true;
+}
+
+void TempoSSI::DisableDebugOutput()
+{
+	this->debugTemposonicSSICommunication = false;
+}
 
 TempoSSI::TempoSSI(int DATA_PIN, int CLOCK_PIN, int BIT_COUNT)
 {
@@ -30,29 +58,29 @@ unsigned long TempoSSI::ReadPosition()
 		for (int p = 0; p < this->BIT_COUNT; ++p)
 		{
 			digitalWrite(this->CLOCK_PIN, LOW);
-			delayMicroseconds(10);
+			delayMicroseconds(clockHalfPeriodMicroseconds);
 			digitalWrite(this->CLOCK_PIN, HIGH);
-			delayMicroseconds(10);
+			delayMicroseconds(clockHalfPeriodMicroseconds);
 
 			dataTempoRead1 |= digitalRead(this->DATA_PIN);
 			dataTempoRead1 <<= 1;
 		}
 		
 		// let LVDT output register update
-		delayMicroseconds(20);
+		delayMicroseconds(registerUpdateMicroseconds);
 		
 		for (int o = 0; o < this->BIT_COUNT; ++o)
 		{
 			digitalWrite(this->CLOCK_PIN, LOW);
-			delayMicroseconds(10);
+			delayMicroseconds(clockHalfPeriodMicroseconds);
 			digitalWrite(this->CLOCK_PIN, HIGH);
-			delayMicroseconds(10);
+			delayMicroseconds(clockHalfPeriodMicroseconds);
 
 			dataTempoRead2 |= digitalRead(this->DATA_PIN);
 			dataTempoRead2 <<= 1;
 		}
 		
-		if(debugTemposonicSSICommunication)
+		if(this->debugTemposonicSSICommunication)
 		{
 			Serial.print(">>> Count ");
 			Serial.print(count);
@@ -89,9 +117,9 @@ unsigned long TempoSSI::ReadPositionRaw()
 	for (int o = 0; o < this->BIT_COUNT; ++o)
 	{
 		digitalWrite(this->CLOCK_PIN, LOW);
-		delayMicroseconds(10);
+		delayMicroseconds(clockHalfPeriodMicroseconds);
 		digitalWrite(this->CLOCK_PIN, HIGH);
-		delayMicroseconds(10);
+		delayMicroseconds(clockHalfPeriodMicroseconds);
 
 		dataTempoRead |= digitalRead(this->DATA_PIN);
 		dataTempoRead <<= 1;

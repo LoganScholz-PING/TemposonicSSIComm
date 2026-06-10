@@ -19,11 +19,20 @@ class TempoSSI
 
         unsigned long ReadPosition();
 		unsigned long ReadPositionRaw();
+        void SetClockHalfPeriodMicroseconds(uint32_t halfPeriodTimeMicroseconds);
+        void SetRegisterUpdateTimeMicroseconds(uint32_t registerUpdateTimeMicroseconds);
+        uint32_t GetClockHalfPeriodMicroseconds();
+        uint32_t GetRegisterUpdateTimeMicroseconds();
+        void EnableDebugOutput();
+        void DisableDebugOutput();
     
     private:
         int DATA_PIN;
         int CLOCK_PIN;
         int BIT_COUNT;
+        uint32_t clockHalfPeriodMicroseconds = 5;
+        uint32_t registerUpdateMicroseconds = 20;
+        bool debugTemposonicSSICommunication = false;
 };
 
 #endif
